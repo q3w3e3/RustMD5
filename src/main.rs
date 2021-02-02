@@ -15,7 +15,7 @@ fn brute() {
 
     let mut max: String = "ffffff00000000000000000000000000".to_string();
     let mut min: String = "000000ffffffffffffffffffffffffff".to_string();
-    let matchThreshold: u16 = 1;
+    let match_threshold: u16 = 8;
 
     let mut result = hasher.finalize();
 
@@ -48,20 +48,20 @@ fn brute() {
         min = cmp::min(min,format!("{:032x}", result));
 
         // check Preffix
-        if checkPreffix(format!("{:032x}", previous),format!("{:032x}", result),0,false) > matchThreshold {
+        if check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,false) >= match_threshold {
             println!("prefix x:      {:032x}", previous);
             println!("prefix md5(x): {:032x}", result);
         }
 
         // check suffix
-        if checkPreffix(format!("{:032x}", previous),format!("{:032x}", result),0,true) > matchThreshold {
+        if check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,true) >= match_threshold {
             println!("suffix x:      {:032x}", previous);
             println!("suffix md5(x): {:032x}", result);
         }
     }
 }
 
-fn checkPreffix(mut first: String, mut second: String, mut count: u16,reversed: bool) -> u16 {
+fn check_prefix(mut first: String, mut second: String, mut count: u16,reversed: bool) -> u16 {
     if reversed{
         first = first.chars().rev().collect();
         second = second.chars().rev().collect();
@@ -71,7 +71,7 @@ fn checkPreffix(mut first: String, mut second: String, mut count: u16,reversed: 
     }
     else if first.chars().nth(0).unwrap() == second.chars().nth(0).unwrap(){
         count += 1;
-        checkPreffix(without_first(first.as_str()).to_string(), without_first(second.as_str()).to_string(),count,reversed);
+        return check_prefix(without_first(first.as_str()).to_string(), without_first(second.as_str()).to_string(),count,false);
     }
     return count;
 }
@@ -85,8 +85,7 @@ fn without_first(string: &str) -> &str {
 }
 
 fn main() {
-
-    checkPreffix("ffffa".to_string(), "ffffb".to_string(), 0, false);
+    println!("{}", check_prefix("ffffaff".to_string(), "ffffbff".to_string(), 0, false).to_string());
 
     let n_workers = 8;
     let n_jobs = 8;
