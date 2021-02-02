@@ -13,9 +13,9 @@ fn brute() {
     println!("seed: {:032x}",seed);
     hasher.update(format!("{:032x}", seed));
 
-    let mut max: String = "ffffff00000000000000000000000000".to_string();
-    let mut min: String = "000000ffffffffffffffffffffffffff".to_string();
-    let match_threshold: u16 = 8;
+    let mut max: String = "ffffff80000000000000000000000000".to_string();
+    let mut min: String = "0000008fffffffffffffffffffffffff".to_string();
+    let match_threshold: u16 = 7;
 
     let mut result = hasher.finalize();
 
@@ -82,6 +82,11 @@ fn without_first(string: &str) -> &str {
         .next()
         .and_then(|(i, _)| string.get(i + 1..))
         .unwrap_or("")
+}
+
+fn swap_nibbles(a: u128) -> u128 {
+    (a << 4) & 0xf0f0_f0f0__f0f0_f0f0____f0f0_f0f0__f0f0_f0f0
+  | (a >> 4) & 0x0f0f_0f0f__0f0f_0f0f____0f0f_0f0f__0f0f_0f0f
 }
 
 fn main() {
