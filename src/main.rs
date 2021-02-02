@@ -85,7 +85,6 @@ fn without_first(string: &str) -> &str {
 }
 
 fn main() {
-    println!("{}", check_prefix("ffffaff".to_string(), "ffffbff".to_string(), 0, false).to_string());
 
     let n_workers = 8;
     let n_jobs = 8;
