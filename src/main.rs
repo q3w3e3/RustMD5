@@ -3,6 +3,7 @@ use rand::Rng;
 use std::cmp;
 use threadpool::ThreadPool;
 use std::process;
+use num_cpus;
 
 fn brute() {
     let mut hasher = Md5::new();
@@ -15,7 +16,7 @@ fn brute() {
 
     let mut max: String = "ffffff80000000000000000000000000".to_string();
     let mut min: String = "0000008fffffffffffffffffffffffff".to_string();
-    let match_threshold: u16 = 7;
+    let mut match_threshold: u16 = 7;
 
     let mut result = hasher.finalize();
 
@@ -34,30 +35,34 @@ fn brute() {
         }
 
         // check if new max hash
-        if format!("{:032x}", result) > max{
+        if format!("{:032x}", result) > max {
             println!("max x:      {:032x}", previous);
             println!("max md5(x): {:032x}", result);
         }
         max = cmp::max(max,format!("{:032x}", result));
 
         // check if new min hash
-        if format!("{:032x}", result) < min{
+        if format!("{:032x}", result) < min {
             println!("min x:      {:032x}", previous);
             println!("min md5(x): {:032x}", result);
         }
         min = cmp::min(min,format!("{:032x}", result));
 
-        // check Preffix
-        if check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,false) >= match_threshold {
+        // check prefix
+        let pref_len: u16 = check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,false);
+        if  pref_len >= match_threshold {
             println!("prefix x:      {:032x}", previous);
             println!("prefix md5(x): {:032x}", result);
         }
 
         // check suffix
-        if check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,true) >= match_threshold {
+        let suff_len: u16 = check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,true);
+        if suff_len >= match_threshold {
             println!("suffix x:      {:032x}", previous);
             println!("suffix md5(x): {:032x}", result);
         }
+
+        match_threshold = cmp::max(cmp::max(pref_len, suff_len), match_threshold);
     }
 }
 
@@ -84,15 +89,9 @@ fn without_first(string: &str) -> &str {
         .unwrap_or("")
 }
 
-fn swap_nibbles(a: u128) -> u128 {
-    (a << 4) & 0xf0f0_f0f0__f0f0_f0f0____f0f0_f0f0__f0f0_f0f0
-  | (a >> 4) & 0x0f0f_0f0f__0f0f_0f0f____0f0f_0f0f__0f0f_0f0f
-}
-
 fn main() {
-
-    let n_workers = 8;
-    let n_jobs = 8;
+    let n_workers = num_cpus::get();
+    let n_jobs = num_cpus::get();
     let pool = ThreadPool::new(n_workers);
 
     for _ in 0..n_jobs{
