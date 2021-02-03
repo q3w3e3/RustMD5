@@ -36,28 +36,28 @@ fn brute() {
 
         // check if new max hash
         if format!("{:032x}", result) > max {
-            //println!("max x:      {:032x}", previous);
-            //println!("max md5(x): {:032x}", result);
+            println!("max x:      {:032x}", previous);
+            println!("max md5(x): {:032x}", result);
         }
         max = cmp::max(max,format!("{:032x}", result));
 
         // check if new min hash
         if format!("{:032x}", result) < min {
-            //println!("min x:      {:032x}", previous);
-            //println!("min md5(x): {:032x}", result);
+            println!("min x:      {:032x}", previous);
+            println!("min md5(x): {:032x}", result);
         }
         min = cmp::min(min,format!("{:032x}", result));
 
         // check prefix
         let pref_len: u16 = check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,false);
-        if  pref_len > match_threshold {
+        if  pref_len >= match_threshold {
             println!("prefix x:      {:032x}", previous);
             println!("prefix md5(x): {:032x}", result);
         }
 
         // check suffix
         let suff_len: u16 = check_prefix(format!("{:032x}", previous),format!("{:032x}", result),0,true);
-        if suff_len > match_threshold {
+        if suff_len >= match_threshold {
             println!("suffix x:      {:032x}", previous);
             println!("suffix md5(x): {:032x}", result);
         }
