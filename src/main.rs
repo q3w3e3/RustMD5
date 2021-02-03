@@ -3,6 +3,7 @@ use rand::Rng;
 use std::cmp;
 use threadpool::ThreadPool;
 use std::process;
+use num_cpus;
 
 fn brute() {
     let mut hasher = Md5::new();
@@ -84,15 +85,9 @@ fn without_first(string: &str) -> &str {
         .unwrap_or("")
 }
 
-fn swap_nibbles(a: u128) -> u128 {
-    (a << 4) & 0xf0f0_f0f0__f0f0_f0f0____f0f0_f0f0__f0f0_f0f0
-  | (a >> 4) & 0x0f0f_0f0f__0f0f_0f0f____0f0f_0f0f__0f0f_0f0f
-}
-
 fn main() {
-
-    let n_workers = 8;
-    let n_jobs = 8;
+    let n_workers = num_cpus::get();
+    let n_jobs = num_cpus::get();
     let pool = ThreadPool::new(n_workers);
 
     for _ in 0..n_jobs{
