@@ -14,9 +14,9 @@ fn brute() {
     println!("seed: {:032x}",seed);
     hasher.update(format!("{:032x}", seed));
 
-    let mut max: String = "ffffff80000000000000000000000000".to_string();
-    let mut min: String = "0000008fffffffffffffffffffffffff".to_string();
-    let mut match_threshold: u16 = 7;
+    let mut max: String = "fffffffff00000000000000000000000".to_string();
+    let mut min: String = "000000000fffffffffffffffffffffff".to_string();
+    let mut match_threshold: u16 = 10;
 
     let mut result = hasher.finalize();
 

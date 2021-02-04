@@ -7,3 +7,5 @@ brute forcing fun md5 hashes with a very slim chance of finding fixed point
 - [ ] stop assuming the compiler has ur back
 - [ ] MPI shit https://github.com/rsmpi/rsmpi
 - [ ] other stuff?
+
+# REMINDER TO SELF ``cargo run --release``
