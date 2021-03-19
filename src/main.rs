@@ -1,5 +1,4 @@
 use md5::{Digest, Md5};
-use num_cpus;
 use rand::Rng;
 use std::cmp;
 use std::convert::TryInto;
@@ -73,7 +72,7 @@ fn check_prefix(first: [u8; 16], second: [u8; 16], mut i: u8) -> u8 {
         i += 1;
         return check_prefix(first, second, i);
     }
-    return i;
+    i
 }
 
 fn check_suffix(first: [u8; 16], second: [u8; 16], mut i: u8) -> u8 {
@@ -81,7 +80,7 @@ fn check_suffix(first: [u8; 16], second: [u8; 16], mut i: u8) -> u8 {
         i -= 1;
         return check_suffix(first, second, i);
     }
-    return i;
+    i
 }
 
 fn main() {
@@ -89,9 +88,8 @@ fn main() {
     let n_jobs = num_cpus::get();
     let pool = ThreadPool::new(n_workers);
     // let n_jobs = 1;
-
     for _ in 0..n_jobs {
-        pool.execute(|| brute());
+        pool.execute(brute);
     }
     pool.join();
 }
